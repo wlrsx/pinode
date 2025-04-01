@@ -1,10 +1,13 @@
 #!/bin/bash
 
-URL="https://raw.githubusercontent.com/wlrsx/pinode/refs/heads/main/routes_config/routes.txt"
+# 每天凌晨 2 点执行
+# 0 2 * * * /etc/openvpn/update_routes.sh
+
+URL="https://raw.githubusercontent.com/wlrsx/pinode/refs/heads/main/routes_config/routes.list"
 CCD_FILE="/etc/openvpn/ccd/pinode"
 SCRIPT_DIR="$(dirname "$0")"
-OLD_FILE="$SCRIPT_DIR/update_routes.old"
-LOG_FILE="/var/log/openvpn-update.log"
+OLD_FILE="$SCRIPT_DIR/routes.list.old"
+LOG_FILE="/var/log/update_routes.log"
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
@@ -26,7 +29,8 @@ sed -i '/^push "route /d' "$CCD_FILE"
 echo "$ROUTES" | while read -r target mask gateway; do
     [ -z "$target" ] && continue
     if [[ "$target" =~ [a-zA-Z] ]]; then
-        ip=$(dig +short "$target" A | grep -v '\.$' | head -n 1)
+        # ip=$(dig +short "$target" A | grep -v '\.$' | head -n 1)
+        ip=$(ping -c 1 -W 1 "$target" | grep -oP '(?<=\().*?(?=\))' | head -n 1)
         if [ -z "$ip" ]; then
             log "无法解析 $target，跳过"
             continue
