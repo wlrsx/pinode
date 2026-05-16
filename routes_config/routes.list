@@ -2,6 +2,11 @@ rs-hk.jadelive.top 255.255.255.255 net_gateway
 223.73.0.0 255.255.0.0 net_gateway
 120.231.0.0 255.255.0.0 net_gateway
 
+# "sl-tk.oray.com"
+# "tk.oray.com"
+# "client-api-v2.oray.com"
+# "slapi.oray.net"
+# "client-api.oray.com"
 43.159.0.0 255.255.0.0 net_gateway
 47.96.0.0 255.255.0.0 net_gateway
 47.97.0.0 255.255.0.0 net_gateway
